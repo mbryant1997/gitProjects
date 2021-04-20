@@ -5,7 +5,7 @@
 import os
 import validation
 userDbPath = "data/user_record/"
-currentPath = "data/auth_session"
+currentPath = "data/auth_session/"
 
 def create(userAccountNum, fName, lName, email, password):
   #create a FileExistsError
@@ -86,10 +86,9 @@ def update(userAccountNum):
   #return true
 """
 
-def newWithdrawal(userAccountNum, database, newAmount):
+def newAmountTotal(userAccountNum, user, newAmount):
       #updateBalance = database.update(balance)
-  print("check 2")
-  newAmount = database[0] + "," + database[1] + "," + database[2] + "," + database[3] + "," + str(database[4])
+  newAmount = user[0] + "," + user[1] + "," + user[2] + "," + user[3] + "," + str(user[4])
   try: 
     f = open(userDbPath + str(userAccountNum) + ".txt", "w")
   except AttributeError:
@@ -144,6 +143,25 @@ def authenticateUser(accountNumber, password):
       return user
 
   return False
+
+def createCurrentSesh(accountNumber):
+    f = open(currentPath + str(accountNumber) + ".txt", 'x')
+    login = "You have logged in"
+    f.write(login)
+    f.close()
+    return True
+
+def deleteCurrentSesh(userAccountNum):
+  isDeleteSuccess = False
+
+  if os.path.exists(currentPath + str(userAccountNum) + ".txt"):
+    try:
+      os.remove(currentPath + str(userAccountNum) + ".txt")
+      isDeleteSuccess = True
+    except FileNotFoundError:
+      print("file not found")
+    finally:
+      return isDeleteSuccess
 
 #create(6663712892, ['Mekhi', 'Bryant', 'mekhibryant97@gmail.com', 'password', 302])
 #delete (6663712892)

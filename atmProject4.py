@@ -26,12 +26,16 @@ def init():
   now = datetime.now()
   print (now)
   print("Welcome to Bank Py")
-  haveAccount = int(input("Do you have an account with us? 1 for yes and 2 for no: "))
+  try: 
+    haveAccount = int(input("Do you have an account with us? 1 for yes and 2 for no: "))
 
-  if (haveAccount == 1):
-    login()
-  elif (haveAccount == 2):
-    register()
+    if (haveAccount == 1):
+      login()
+    elif (haveAccount == 2):
+      register()
+  except ValueError:
+    print("Please enter a number")
+    init()
   else: 
     print("You have selected an invalid option")
     init()
@@ -53,6 +57,7 @@ def login():
     user= database.authenticateUser(accountNumFromUser, passwordUser)
 
     if (user):
+      database.createCurrentSesh(user)
       bankOp(user)
 
     #for accountNumber, password in database.items():
@@ -102,8 +107,8 @@ def register():
 
 
 
-def bankOp(database):
-  print ("Welcome %s %s!" %(database[0], database[1]))
+def bankOp(user):
+  print ("Welcome %s %s!" %(user[0], user[1]))
  
   print("These are the available options: ")
   print("1. Withdrawal ")
@@ -114,9 +119,9 @@ def bankOp(database):
   choice = int(input("What option number would you like to do today? "))
 
   if (choice ==1):
-    withdrawal(database)
+    withdrawal(user)
   elif (choice ==2):
-    deposit(database)
+    deposit(user)
   elif (choice ==3):
     complaint()
   elif (choice ==4):
@@ -124,34 +129,28 @@ def bankOp(database):
     init()
   else:
     print("Invalid option)")
-    bankOp(database) 
+    bankOp(user) 
 
 
-def withdrawal(database):
+def withdrawal(user):
+  currentAmount = float(user[4])
+  print ("Your current balance is $%.2f" %currentAmount)
   withdraw = float (input("How much would you like to withdraw? $"))
-  print ("withdraw is $%.2f" %withdraw)
-  currentAmount = float(database[4])
-  print ("current is $%.2f" %currentAmount)
-  #try: 
-  if (withdraw <= currentAmount):
-    balance = currentAmount - withdraw
-    #updateBalance = database.update(balance)
-    newAmount = database[0] + "," + database[1] + "," + database[2] + "," + database[3] + "," + str(balance)
-    print (newAmount) 
-    isNewAmount = database.newWithdrawl(accountNumFromUser, database, newAmount) 
-    print (isNewAmount)
-    if (isNewAmount): 
-      print("check 1")
-      print("Your new balance is $%.2f" %balance)
-      print ("Please take your cash")
+  try: 
+    if (withdraw <= currentAmount):
+      balance = currentAmount - withdraw
+      #updateBalance = database.update(balance)
+      newAmount = user[0] + "," + user[1] + "," + user[2] + "," + user[3] + "," + str(balance)
+      isNewAmount = database.newAmountTotal(accountNumFromUser, user, newAmount) 
+      if (isNewAmount): 
+        print("Your new balance is $%.2f" %balance)
+        print ("Please take your cash")
+      else: 
+        print("Not enough funds in your account")
 
-      
-  #except AttributeError:
-   # print("attribute error")
-    #withdrawal(database)
-
-  else: 
-      print("Not enough funds in your account")
+  except AttributeError:
+    print("Please try again")
+    withdrawal(database)
 
   check = True
   while check == True:
@@ -168,9 +167,22 @@ def withdrawal(database):
       check = True
  
 
-def deposit():
+def deposit(user):
+  currentAmount = float(user[4])
+  print ("Your current balance is $%.2f" %currentAmount)
   depo = float (input("How much would you like to deposit? $"))
-  print("Your current balance is $%.2f" %depo)
+
+  try: 
+    balance = currentAmount + depo
+    newAmount = user[0] + "," + user[1] + "," + user[2] + "," + user[3] + "," + str(balance)
+    isNewAmount = database.newAmountTotal(accountNumFromUser, user, newAmount) 
+    if (isNewAmount): 
+      print ("Please insert your cash")
+      print("Your new balance is $%.2f" %balance)
+
+  except AttributeError:
+    print("Please try again")
+    deposit(user)
   check = True
   while check == True:
     anyMore = int(input ("Is that all for today? 1 for yes and 2 for no \n"))
@@ -205,6 +217,7 @@ def complaint():
   
 
 def logout():
+  database.deleteCurrentSesh(accountNumFromUser)
   print("Goodbye")
 
 
