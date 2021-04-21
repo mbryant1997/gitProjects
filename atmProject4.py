@@ -47,7 +47,7 @@ def login():
     user= database.authenticateUser(accountNumFromUser, passwordUser)
 
     if (user):
-      database.createCurrentSesh(accountNumFromUser)
+      database.createCurrentSesh(accountNumFromUser, user)
       bankOp(user)
       
     else:
@@ -124,8 +124,8 @@ def withdrawal(user):
     if (withdraw <= currentAmount):
       balance = currentAmount - withdraw
       #updateBalance = database.update(balance)
-      newAmount = user[0] + "," + user[1] + "," + user[2] + "," + user[3] + "," + str(balance)
-      isNewAmount = database.newAmountTotal(accountNumFromUser, user, newAmount) 
+      #newAmount = user[0] + "," + user[1] + "," + user[2] + "," + user[3] + "," + str(balance)
+      isNewAmount = database.newAmountTotal(accountNumFromUser, user) 
       if (isNewAmount): 
         print("Your new balance is $%.2f" %balance)
         print ("Please take your cash")
@@ -158,8 +158,8 @@ def deposit(user):
 
   try: 
     balance = currentAmount + depo
-    newAmount = user[0] + "," + user[1] + "," + user[2] + "," + user[3] + "," + str(balance)
-    isNewAmount = database.newAmountTotal(accountNumFromUser, user, newAmount) 
+    #newAmount = user[0] + "," + user[1] + "," + user[2] + "," + user[3] + "," + str(balance)
+    isNewAmount = database.newAmountTotal(accountNumFromUser, user) 
     if (isNewAmount): 
       print ("Please insert your cash")
       print("Your new balance is $%.2f" %balance)

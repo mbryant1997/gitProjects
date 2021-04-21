@@ -4,6 +4,7 @@
 #delete record
 import os
 import validation
+
 userDbPath = "data/user_record/"
 currentPath = "data/auth_session/"
 
@@ -57,36 +58,17 @@ def read(userAccountNum):
   else:
     return f.readline()
 
-""""
-def update(userAccountNum):
-  print("update user record")
-  isValidAccountNum = validation.accountNumValidate(userAccountNum)
-  userDataPass = str.split(read(userAccountNum), ",")
-  print (userDataPass[4])
-  completionState = False
-  try:
-    if (isValidAccountNum):
-      f = open(userDbPath + str(userAccountNum) + ".txt", "x")
-  except FileNotFoundError:
-    print("user not found")
-  except FileExistsError:
-    print("file doesn't exist")
-  except TypeError:
-    print("invalid account number format")
-  else: 
-    f.write(str(userDataPass[4]))
-    completionState = True
-  finally:
-    f.close()
-    return completionState
+
+def update(userAccountNum): 
   #find user with account number
   #search content of file
   #update content
   #save file 
   #return true
-"""
+  pass
 
-def newAmountTotal(userAccountNum, user, newAmount):
+
+def newAmountTotal(userAccountNum, user):
       #updateBalance = database.update(balance)
   newAmount = user[0] + "," + user[1] + "," + user[2] + "," + user[3] + "," + str(user[4])
   try: 
@@ -144,12 +126,23 @@ def authenticateUser(accountNumber, password):
 
   return False
 
-def createCurrentSesh(accountNumber):
-    f = open(currentPath + str(accountNumber) + ".txt", 'x')
-    login = "You have logged in"
-    f.write(login)
+def createCurrentSesh(userAccountNum, user):
+  #userDataInfo = fName + "," + lName + "," + email + "," + password+ "," + balance
+  f = ""
+  completionState = False
+  try: 
+    f = open(currentPath + str(userAccountNum) + ".txt", 'x')
+  except FileExistsError:
+    #delete the already created file, and print out error, then return false
+    return completionState
+  else: 
+    f.write(str(user))
+    completionState = True
+    print( "You have logged in")
     f.close()
-    return True
+  finally: 
+    return completionState
+
 
 def deleteCurrentSesh(userAccountNum):
   isDeleteSuccess = False
@@ -172,3 +165,5 @@ def deleteCurrentSesh(userAccountNum):
 #authenticateUser(2078135735, "password")
 #create(5243951234, "Naomi", "Bryant", "nai@gmail.com", "yessir")
 #update(2078135735)
+#createCurrentSesh(2078135735)
+#deleteCurrentSesh(2078135735)
