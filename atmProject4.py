@@ -6,20 +6,10 @@ from getpass import getpass
 #register
 # username, password, and email address
 #generate user account
-
-
 # login
 #username or email and password
-
 #bank operations
-
 #initialize the System
-
-
-"""database = {
-  1493712892 : ['Mekhi', 'Bryant', 'mekhibryant97@gmail.com', 'password', 302]
-    } #dictionary
-"""
 
 def init():
 
@@ -57,13 +47,8 @@ def login():
     user= database.authenticateUser(accountNumFromUser, passwordUser)
 
     if (user):
-      database.createCurrentSesh(user)
+      database.createCurrentSesh(accountNumFromUser)
       bankOp(user)
-
-    #for accountNumber, password in database.items():
-     # if (accountNumber == int(accountNumFromUser)):
-      #  if (password[3] == passwordUser)
-          #bankOp(password)
       
     else:
       print ("Invalid password")
@@ -85,9 +70,8 @@ def register():
   password = getpass ("Create a password for yourself:\n" )
 
   accountNumber = genAccount()
-  #preparedUserDetails = fName + ", " + lName + ", " + email + ", " + password+ ", " + str(0)
-  #database[accountNumber] = [fName, lName, email, password]
-  isUserCreated = database.create(accountNumber,fName,lName,email, password)
+
+  isUserCreated = database.create(accountNumber,fName,lName,email,password)
   
   
   if isUserCreated:
@@ -101,7 +85,7 @@ def register():
     login()
 
   else:
-    print("something went wrong. please try again")
+    print("Something went wrong. Please try again")
     register()
 
 
